@@ -5,7 +5,10 @@ from pydantic import BaseModel
 
 from fastapi.middleware.cors import CORSMiddleware
 
-# ამის მიწერა ხდება მაშინვე, როცა app იქმნება (მაგ: app = FastAPI())
+# 1. ჯერ იქმნება app
+app = FastAPI(title="Insight AI - Logistics & B2B SaaS Backend")
+
+# 2. და მხოლოდ ამის მერე ემატება CORS მიდლვერი
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -13,8 +16,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-app = FastAPI(title="Insight AI - Logistics & B2B SaaS Backend")
 
 # Render Environment Variables-დან იღებს API გასაღებს
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
@@ -53,7 +54,6 @@ async def parse_document(file: UploadFile = File(...)):
         """
 
     response = client.chat.completions.create(
-
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}],
         response_format={"type": "json_object"},
