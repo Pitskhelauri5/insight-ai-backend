@@ -30,16 +30,16 @@ async def parse_document(file: UploadFile = File(...)):
             raise HTTPException(status_code=400, detail="ფაილი ცარიელია ან ტექსტის წაკითხვა ვერ მოხერხდა.")
 
         prompt = f"""
-        შენ ხარ B2B ლოგისტიკის AI ასისტენტი. გააანალიზე დოკუმენტი და დააბრუნე მკაცრად JSON ფორმატით შემდეგი ზუსტი ველებით:
-        - document_type (სტრიქონი)
-        - r_l_number (სტრიქონი, ბლ/ნომერი)
-        - shipper (სტრიქონი, გამგზავნი კომპანია)
-        - consignee (სტრიქონი, მიმღები კომპანია)
-        - vessel_voyage (სტრიქონი, გემი/რეისი)
-        - port_of_loading (სტრიქონი)
-        - port_of_discharge (სტრიქონი)
-        - total_freight_cost (სტრიქონი ან რიცხვი, მაგ: "$3,850.00 USD")
-        - items (მასივი, სადაც თითოეულ ობიექტს აქვს: item_description, hs_code, qty_weight, decl_value)
+        შენ ხარ B2B ლოგისტიკის AI ასისტენტი. გააანალიზე დოკუმენტი და დააბრუნე მკაცრად JSON ფორმატით შემდეგი ზუსტი ველებით. თუ რომელიმე ზუსტი მონაცემი დოკუმენტში არ წერია, მოიფიქრე ლოგიკური/სადემონსტრაციო მნიშვნელობა, რომ ველი ცარიელი არ დარჩეს:
+        - document_type (სტრიქონი, მაგ: "BILL OF LADING")
+        - r_l_number (სტრიქონი, მაგ: "BOL-2026-999")
+        - shipper (სტრიქონი, გამგზავნი კომპანია და მისამართი)
+        - consignee (სტრიქონი, მიმღები კომპანია და მისამართი)
+        - vessel_voyage (სტრიქონი, მაგ: "MAERSK MC-KINNEY / V.2409E")
+        - port_of_loading (სტრიქონი, მაგ: "Hamburg, DE (DEHAM)")
+        - port_of_discharge (სტριქონი, მაგ: "Miami, USA (USMIA)")
+        - total_freight_cost (სტრიქონი, მაგ: "$3,850.00 USD")
+        - items (მინიმუმ 1 ან 2 ელემენტიანი მასივი, სადაც თითოეულ ობიექტს აქვს: item_description, hs_code, qty_weight, decl_value)
 
         დოკუმენტის ტექსტი:
         {text_content}
