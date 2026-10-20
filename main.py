@@ -1,3 +1,8 @@
+import os
+from fastapi import FastAPI, File, HTTPException, UploadFile
+from openai import OpenAI
+from pydantic import BaseModel
+
 from fastapi.middleware.cors import CORSMiddleware
 
 # ამის მიწერა ხდება მაშინვე, როცა app იქმნება (მაგ: app = FastAPI())
@@ -8,11 +13,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-import os
-from fastapi import FastAPI, File, HTTPException, UploadFile
-from openai import OpenAI
-from pydantic import BaseModel
 
 app = FastAPI(title="Insight AI - Logistics & B2B SaaS Backend")
 
