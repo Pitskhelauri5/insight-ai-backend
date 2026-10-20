@@ -1,3 +1,13 @@
+from fastapi import FastAPI
+
+app = FastAPI()
+
+
+# ეს არის მთავარი გვერდის (/) როუტი
+@app.get("/")
+def read_root():
+  return {"message": "Insight AI Backend is running!"}
+
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
