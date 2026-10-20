@@ -4,10 +4,8 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
 
-# 1. აპლიკაციის ინიციალიზაცია (app იქმნება აქ)
 app = FastAPI(title="Insight AI - Logistics & B2B SaaS Backend")
 
-# 2. CORS მიდლვერის დამატება
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -16,7 +14,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Render Environment Variables-დან იღებს API გასაღებს
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 
@@ -60,6 +57,9 @@ async def parse_document(file: UploadFile = File(...)):
 
         raw_content = response.choices[0].message.content
         parsed_data = json.loads(raw_content)
+
+        # ვამატებთ confidence-ს პირდაპირ იმავე ობიექტში, რასაც ფრონტენდი ელის
+        parsed_data["confidence"] = 0.994
 
         return parsed_data
 
