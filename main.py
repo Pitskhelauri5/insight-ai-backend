@@ -16,11 +16,9 @@ app.add_middleware(
 
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
-
 @app.get("/")
 def root():
     return {"message": "Insight AI Backend is Live and Ready!"}
-
 
 @app.post("/api/parse-document/")
 async def parse_document(file: UploadFile = File(...)):
@@ -29,9 +27,7 @@ async def parse_document(file: UploadFile = File(...)):
         text_content = content.decode("utf-8", errors="ignore")
 
         if not text_content.strip():
-            raise HTTPException(
-                status_code=400, detail="ფაილი ცარიელია ან ტექსტის წაკითხვა ვერ მოხერხდა."
-            )
+            raise HTTPException(status_code=400, detail="ფაილი ცარიელია ან ტექსტის წაკითხვა ვერ მოხერხდა.")
 
         prompt = f"""
         შენ ხარ B2B ლოგისტიკის AI ასისტენტი. გააანალიზე დოკუმენტი და დააბრუნე მკაცრად JSON ფორმატით შემდეგი ზუსტი ველებით:
@@ -58,12 +54,8 @@ async def parse_document(file: UploadFile = File(...)):
         raw_content = response.choices[0].message.content
         parsed_data = json.loads(raw_content)
 
-        # ვუბრუნებთ სტრუქტურას, სადაც ველები შიგნითაა (data), ხოლო confidence ცალკეა
-        return {
-            "status": "success",
-            "data": parsed_data,
-            "confidence": 0.994
-        }
+        # ვუბრუნებთ პირდაპირ დაპარსულ ობიექტს ყოველგვარი დამატებითი შეფუთვის გარეშე
+        return parsed_data
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
