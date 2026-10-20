@@ -1,3 +1,30 @@
+import json
+import os
+from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from openai import OpenAI
+
+# 1. აპლიკაციის ინიციალიზაცია (app იქმნება აქ)
+app = FastAPI(title="Insight AI - Logistics & B2B SaaS Backend")
+
+# 2. CORS მიდლვერის დამატება
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Render Environment Variables-დან იღებს API გასაღებს
+client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+
+
+@app.get("/")
+def root():
+    return {"message": "Insight AI Backend is Live and Ready!"}
+
+
 @app.post("/api/parse-document/")
 async def parse_document(file: UploadFile = File(...)):
     try:
@@ -9,7 +36,6 @@ async def parse_document(file: UploadFile = File(...)):
                 status_code=400, detail="ფაილი ცარიელია ან ტექსტის წაკითხვა ვერ მოხერხდა."
             )
 
-        # ზუსტი ველები, რასაც ფრონტენდის დიზაინი ელის
         prompt = f"""
         შენ ხარ B2B ლოგისტიკის AI ასისტენტი. გააანალიზე დოკუმენტი და დააბრუნე მკაცრად JSON ფორმატით შემდეგი ზუსტი ველებით:
         - document_type (სტრიქონი)
@@ -35,7 +61,6 @@ async def parse_document(file: UploadFile = File(...)):
         raw_content = response.choices[0].message.content
         parsed_data = json.loads(raw_content)
 
-        # პირდაპირ ვაბრუნებთ დაპარსულ ობიექტს, რომ ფრონტენდმა უპრობლემოდ წაიკითხოს
         return parsed_data
 
     except Exception as e:
