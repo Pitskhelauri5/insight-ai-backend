@@ -26,7 +26,7 @@ def root():
   return {"message": "Insight AI Backend is Live and Ready!"}
 
 
-@app.post("/api/parse-document")
+@app.post("/api/parse-document/")
 async def parse_document(file: UploadFile = File(...)):
   try:
     # ფაილის შიგთავსის წაკითხვა
