@@ -58,10 +58,12 @@ async def parse_document(file: UploadFile = File(...)):
         raw_content = response.choices[0].message.content
         parsed_data = json.loads(raw_content)
 
-        # ვამატებთ confidence-ს პირდაპირ იმავე ობიექტში, რასაც ფრონტენდი ელის
-        parsed_data["confidence"] = 0.994
-
-        return parsed_data
+        # ვუბრუნებთ სტრუქტურას, სადაც ველები შიგნითაა (data), ხოლო confidence ცალკეა
+        return {
+            "status": "success",
+            "data": parsed_data,
+            "confidence": 0.994
+        }
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
